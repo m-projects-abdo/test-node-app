@@ -1,0 +1,23 @@
+extends layouts/main-layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/product.css")
+
+block content
+    main
+        if (errorCode == 1)
+            div(
+                class=(status == 'success' ? 'success-message' : 'warning-message')
+            )
+                h3 #{status}
+                p #{message}
+
+        form.product-form(action="/admin/add-product", method="POST")
+            .form-control
+                label(for="name") Name
+                input(type="text", name="name")#title
+                
+                label(for="price") Price
+                input(type="text", name="price")#title
+            button.btn(type="submit") Add Product

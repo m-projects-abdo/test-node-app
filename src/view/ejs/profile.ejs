@@ -1,0 +1,13 @@
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+  <%- include('./includes/navigation.ejs') %> 
+  <main class="profile">
+    <h1><%= data.name %></h1>
+    <p><%= data.email %></p>
+
+    <form action="/" method="GET">
+      <button class="home_button" type="submit">Back to home..</button>
+    </form>
+  </main>
+<%- include('./includes/end.ejs') %> 
