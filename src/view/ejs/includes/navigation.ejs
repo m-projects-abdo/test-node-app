@@ -6,8 +6,8 @@
     let res = await fetch('http://localhost:3000/auth/login', {
       method: 'POST',
       body: JSON.stringify({
-        email: "wss22wss222sss22@test.com",
-        password: "test@2022"
+        email: "test@gmail.com",
+        password: "test"
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
@@ -17,7 +17,6 @@
     localStorage.setItem('user', JSON.stringify(user.data));
     user_name.innerText = user.data.name;
     email.value = user.data.email;
-    console.log(email.value);
   }
 
   user_name.addEventListener('click', async()=> {
@@ -63,6 +62,12 @@
           class="<%= pagePath == '/admin/add-product' ? 'active' : '' %>" 
           href="/admin/add-product"
         >Add Product</a>
+      </li>
+      <li class="main-header__item">
+        <a 
+          class="<%= pagePath == '/auth/register' ? 'active' : '' %>" 
+          href="/auth/register"
+        >Register</a>
       </li>
     </ul>
   </nav>

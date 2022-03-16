@@ -3,7 +3,21 @@ const bcrypt = require('bcryptjs');
 
 let errors = {errors:{}};
 
-const register = async (req, res, next) => {
+exports.registerPage = (req, res, next) => {
+  res.status(200).render('register',{
+    pageTitle: 'Register page',
+    pagePath: '/auth/register'
+  });
+}
+
+exports.loginPage = (req, res, next) => {
+  res.status(200).render('login',{
+    pageTitle: 'Login page',
+    pagePath: '/auth/login'
+  });
+}
+
+exports.register = async (req, res, next) => {
   let {username, email, password} = req.body;
 
   //validate request body
@@ -30,12 +44,14 @@ const register = async (req, res, next) => {
   //create new user
   Users.create({name: username, email, password});
   
-  return res.status(201).json({
-    message: `User with name ${username}, created successfully.`
-  });
+  return res.status(200).redirect('/');
+
+  // return res.status(201).json({
+  //   message: `User with name ${username}, created successfully.`
+  // });
 }
 
-const login = async (req, res, next) => {
+exports.login = async (req, res, next) => {
   const {email, password} = req.body;
 
   //validate request..
@@ -81,9 +97,4 @@ const messageValidator = (payload) => {
   if (!payload.password && payload.password != undefined) errors.errors.password = {
     message: 'Password is required.'
   }
-}
-
-module.exports = {
-  register,
-  login
 }

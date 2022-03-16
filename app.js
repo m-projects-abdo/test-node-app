@@ -1,16 +1,19 @@
-const path = require('path');
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
-const auth = require('./src/routes/auth/users');
-const adminRoutes = require('./src/routes/admin');
-const shopRoutes = require('./src/routes/shop');
-const page404Routes = require('./src/routes/pageNotFound');
-
-const port = 3000;
-const app = express();
-const db = require('./src/util/connection');
+const {
+  db, 
+  auth, 
+  cors, 
+  path, 
+  app,
+  port,
+  TWO_HOURS,
+  express,
+  session,
+  bodyParser,
+  sqlSessionConnection, 
+  adminRoutes, 
+  page404Routes, 
+  shopRoutes
+} = require('./env');
 
 //Set pug as render engine
 // app.set('view engine', 'pug');
@@ -27,6 +30,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 //use express static method to load all css files
 app.use(express.static(path.join(__dirname, 'src', 'public')));
+
+app.use(
+  session({
+    secret: 'Vector',
+    store: new sqlSessionConnection({db: db}),
+    resave: false,
+    proxy: true,
+    // saveUninitialized: false,
+    cookie: {
+      maxAge: TWO_HOURS,
+      sameSite: true,
+      secure: false
+    }
+  })
+);
 
 //load all express routes
 app.use('/auth', auth);
