@@ -13,9 +13,12 @@
         <% for(let item of prods) { %>
           <article class="card product-item">
             <header class="card__header">
-                <h1 class="product__title">
+                <p class="product__title">
+                  <%= item.ownerName %>
+                </p>
+                <p class="product__title">
                   <%= item.title %>
-                </h1>
+                </p>
             </header>
             <div class="card__image">
               <!-- <img 
@@ -26,9 +29,9 @@
               > -->
             </div>
             <div class="card__content">
-                <h2 class="product__price">
+                <p class="product__price">
                   <%= item.price %>$
-                </h2>
+                </p>
                 <p class="product__description">
                   <%= item.description %>..
                 </p>

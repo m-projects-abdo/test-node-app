@@ -8,6 +8,10 @@ const products = db.define('products', {
     allowNull: false,
     primaryKey: true,
   },
+  ownerName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   title: {
     type: Sequelize.STRING,
     allowNull: false,

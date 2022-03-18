@@ -1,7 +1,7 @@
 const Products = require('../models/products');
 const Users = require('../data/migrations/users');
 
-const getProducts = async (req, res, next) => {
+exports.getProducts = async (req, res, next) => {
     try {
         const products = await Products.getAll();
         res.status(201).render('shop', {
@@ -14,16 +14,15 @@ const getProducts = async (req, res, next) => {
     }
 }
 
-const getProfile = async (req, res, next) => {
-    const {email} = req.body;
-    req.session.views += 1 || 1;
-    req.session.visitor += 1 || 1;
-    req.session.isLoggedIn = true;
+exports.getProfile = async (req, res, next) => {
+    if(!req.user) {
+        return res.status(401).redirect('/');
+    }
     try {
-        const user = await Users.findOne({where: {email: email}});
-        if(!user) res.status(300).redirect('/');
+        const user = await Users.findOne({where: {email: req.user.email}});
+        if(!user) return res.status(300).redirect('/');
         
-        res.status(200).render('profile', {
+        return res.status(200).render('profile', {
             pageTitle: user.dataValues.name,
             pagePath: '/profile',
             data: user.dataValues
@@ -33,7 +32,21 @@ const getProfile = async (req, res, next) => {
     }
 }
 
-module.exports = {
-    getProducts,
-    getProfile
+exports.getCurrentUser = async (req, res, next) => {
+    if(!req.user) {
+        return res.status(401).redirect('/');
+    }
+    try {
+        const user = await Users.findOne({where: {id: req.user.id}});
+        if(!user) return res.status(300).redirect('/');
+        
+        return res.status(200).json({
+            message: `Welcome ${user.dataValues.name} to your community.`,
+            data: {
+                ...user.dataValues
+            }
+        });
+    } catch (error) {
+        throw new Error(error);
+    }
 }

@@ -1,6 +1,6 @@
 const Products = require('../data/migrations/products');
 
-const add = async (req, res, next) => {
+exports.add = async (req, res, next) => {
     const {title, price, description} = req.body;
     
     if (!title || !price || !description) {
@@ -13,14 +13,22 @@ const add = async (req, res, next) => {
     } 
     
     try {
-        await Products.create({title,price,description});
+        if (!req.user) {
+            return res.render('add-product', {
+                pageTitle: 'Add Products',
+                pagePath: '/admin/add-product',
+                message: 'You need to log in.'
+            });
+        }
+        const ownerName = req.user.name
+        await Products.create({title,price,description,ownerName});
         res.status(201).redirect('/');
     } catch (error) {
         throw new Error(error);
     }
 }
 
-const deleteAll = async (req, res, next) => {
+exports.deleteAll = async (req, res, next) => {
     try {
         await Products.deleteAll();
         res.status(201).redirect('/');
@@ -29,17 +37,10 @@ const deleteAll = async (req, res, next) => {
     }
 }
 
-const page = (req, res, next) => {
-    const respone = {
+exports.page = (req, res, next) => {
+    res.status(200).render('add-product', {
         pageTitle: 'Add Products',
-        pagePath: '/admin/add-product'
-    }
-
-    res.status(200).render('add-product', respone)
-}
-
-module.exports = {
-    page,
-    add,
-    deleteAll
+        pagePath: '/admin/add-product',
+        message: ''
+    });
 }

@@ -7,6 +7,11 @@
 <body>
   <%- include('./includes/navigation.ejs') %> 
   <main>
+    <% if (errors.length > 0) { %>
+      <% errors.forEach(err => { %>
+        <p class="errors-message"><%= err.message %></p> 
+      <% }) %>
+    <% } %>
     <form class="product-form" action="/auth/register" method="POST">
       <div class="form-control">
         <label for="username">User name</label>

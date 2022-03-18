@@ -12,6 +12,8 @@ exports.adminRoutes = require('./src/routes/admin');
 exports.shopRoutes = require('./src/routes/shop');
 exports.page404Routes = require('./src/routes/pageNotFound');
 
+exports.Users = require('./src/data/migrations/users');
+
 exports.app = this.express();
 exports.port = 3000;
-exports.TWO_HOURS = 1000*10;//* 60 * 60 * 2;
+exports.TWO_HOURS = 1000*60*60*2; //Two hours..

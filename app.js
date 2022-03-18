@@ -1,6 +1,7 @@
 const {
   db, 
-  auth, 
+  auth,
+  Users, 
   cors, 
   path, 
   app,
@@ -37,7 +38,7 @@ app.use(
     store: new sqlSessionConnection({db: db}),
     resave: false,
     proxy: true,
-    // saveUninitialized: false,
+    saveUninitialized: false,
     cookie: {
       maxAge: TWO_HOURS,
       sameSite: true,
@@ -45,6 +46,25 @@ app.use(
     }
   })
 );
+
+//set user to every incoming request..
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+
+  Users.findOne({where:{id: req.session.user.id}})
+  .then(user => {
+    if(!user) {
+      return next();
+    }
+    
+    req.user = user.dataValues;
+    return next(); 
+  })
+  .catch(err => { throw new Error(err) });
+  
+});
 
 //load all express routes
 app.use('/auth', auth);
