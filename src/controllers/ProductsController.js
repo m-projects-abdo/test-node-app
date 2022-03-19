@@ -17,7 +17,8 @@ exports.add = async (req, res, next) => {
             return res.render('add-product', {
                 pageTitle: 'Add Products',
                 pagePath: '/admin/add-product',
-                message: 'You need to log in.'
+                message: 'You need to log in.',
+                isLoggedIn: !!req.user
             });
         }
         const ownerName = req.user.name
@@ -41,6 +42,7 @@ exports.page = (req, res, next) => {
     res.status(200).render('add-product', {
         pageTitle: 'Add Products',
         pagePath: '/admin/add-product',
-        message: ''
+        message: '',
+        isLoggedIn: !!req.user
     });
 }

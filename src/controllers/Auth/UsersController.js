@@ -5,6 +5,7 @@ exports.registerPage = (req, res, next) => {
   res.status(200).render('register',{
     pageTitle: 'Register page',
     pagePath: '/auth/register',
+    isLoggedIn: !!req.user,
     errors: []
   });
 }
@@ -13,6 +14,7 @@ exports.loginPage = (req, res, next) => {
   res.status(200).render('login',{
     pageTitle: 'Login page',
     pagePath: '/auth/login',
+    isLoggedIn: !!req.user,
     errors: []
   });
 }
@@ -25,6 +27,7 @@ exports.register = async (req, res, next) => {
     return res.status(404).render('register', {
       pagePath: '/auth/register',
       pageTitle: 'Register',
+      isLoggedIn: !!req.user,
       errors: messageValidator(req.body)
     });
   }
@@ -39,6 +42,7 @@ exports.register = async (req, res, next) => {
     return res.status(200).render('register', {
       pagePath: '/auth/register',
       pageTitle: 'Register',
+      isLoggedIn: !!req.user,
       errors: messageValidator(req.body)
     });
   } 
@@ -49,8 +53,6 @@ exports.register = async (req, res, next) => {
   //create new user
   const user_session_data = await Users.create({name: username, email, password});
   
-  console.log('Register: ', user_session_data);
-
   //register him/her on browser session
   req.session.user = user_session_data;
 
@@ -65,6 +67,7 @@ exports.login = async (req, res, next) => {
     return res.status(404).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
+      isLoggedIn: !!req.user,
       errors: messageValidator(req.body)
     });
   }
@@ -74,6 +77,7 @@ exports.login = async (req, res, next) => {
     return res.status(200).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
+      isLoggedIn: !!req.user,
       errors: [{message: 'You don\'t have an account.'}]
     });
   }
@@ -83,16 +87,24 @@ exports.login = async (req, res, next) => {
     return res.status(200).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
+      isLoggedIn: !!req.user,
       errors: [{message: 'Email or Password are wrong!'}]
     });
   }
-
-  console.log('Login: ', user_session_data);
 
   //register him/her on browser session
   req.session.user = user_session_data;
 
   return res.status(200).redirect('/');
+}
+
+exports.logout = (req, res, next) => {
+  if(req.user) {
+    req.session.destroy();
+    return res.status(200).redirect('/');
+  }
+
+  return res.status(404).redirect('/');
 }
 
 const messageValidator = (payload) => {  

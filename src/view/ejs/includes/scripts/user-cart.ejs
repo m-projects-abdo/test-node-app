@@ -1,0 +1,21 @@
+<script>
+  let cartList = [];
+  const item = {};
+
+  function addToCart(itemDom) {
+    const domSelect = itemDom.parentNode.parentNode;
+    
+    cartList = getFromLocalStorage();
+    item.ownerName = domSelect.querySelectorAll('.card__header .product__title')[0].innerText;
+    item.title = domSelect.querySelectorAll('.card__header .product__title')[1].innerText;
+    item.price = domSelect.querySelector('.card__content .product__price').innerText;
+    item.description = domSelect.querySelector('.card__content .product__description').innerText;
+
+    cartList.push(item);
+    localStorage.setItem('cart', JSON.stringify(cartList));
+  }
+
+  function getFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  }
+</script>
