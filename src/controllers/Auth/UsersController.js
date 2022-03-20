@@ -2,10 +2,11 @@ const Users = require('../../data/migrations/users');
 const bcrypt = require('bcryptjs');
 
 exports.registerPage = (req, res, next) => {
-  res.status(200).render('register',{
+  res.render('register',{
     pageTitle: 'Register page',
     pagePath: '/auth/register',
-    isLoggedIn: !!req.user,
+    isLoggedIn: req.isLoggedIn,
+    username: req.isLoggedIn ? req.user.name : '',
     errors: []
   });
 }
@@ -14,7 +15,8 @@ exports.loginPage = (req, res, next) => {
   res.status(200).render('login',{
     pageTitle: 'Login page',
     pagePath: '/auth/login',
-    isLoggedIn: !!req.user,
+    isLoggedIn: req.isLoggedIn,
+    username: req.isLoggedIn ? req.user.name : '',
     errors: []
   });
 }
@@ -27,7 +29,8 @@ exports.register = async (req, res, next) => {
     return res.status(404).render('register', {
       pagePath: '/auth/register',
       pageTitle: 'Register',
-      isLoggedIn: !!req.user,
+      isLoggedIn: req.isLoggedIn,
+      username: req.isLoggedIn ? req.user.name : '',
       errors: messageValidator(req.body)
     });
   }
@@ -42,7 +45,8 @@ exports.register = async (req, res, next) => {
     return res.status(200).render('register', {
       pagePath: '/auth/register',
       pageTitle: 'Register',
-      isLoggedIn: !!req.user,
+      isLoggedIn: req.isLoggedIn,
+      username: req.isLoggedIn ? req.user.name : '',
       errors: messageValidator(req.body)
     });
   } 
@@ -56,7 +60,7 @@ exports.register = async (req, res, next) => {
   //register him/her on browser session
   req.session.user = user_session_data;
 
-  return res.status(200).redirect('/');
+  return res.redirect('/');
 }
 
 exports.login = async (req, res, next) => {
@@ -67,18 +71,20 @@ exports.login = async (req, res, next) => {
     return res.status(404).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
-      isLoggedIn: !!req.user,
+      isLoggedIn: req.isLoggedIn,
+      username: req.isLoggedIn ? req.user.name : '',
       errors: messageValidator(req.body)
     });
   }
   
   const user_session_data = await Users.findOne({ where: { email: email } })
   if (!user_session_data) {
-    return res.status(200).render('login', {
+    return res.render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
-      isLoggedIn: !!req.user,
-      errors: [{message: 'You don\'t have an account.'}]
+      isLoggedIn: req.isLoggedIn,
+      username: req.isLoggedIn ? req.user.name : '',
+      errors: [{message: 'Email or password are wrong.'}]
     });
   }
 
@@ -87,7 +93,8 @@ exports.login = async (req, res, next) => {
     return res.status(200).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
-      isLoggedIn: !!req.user,
+      isLoggedIn: req.isLoggedIn,
+      username: req.isLoggedIn ? req.user.name : '',
       errors: [{message: 'Email or Password are wrong!'}]
     });
   }
@@ -95,13 +102,13 @@ exports.login = async (req, res, next) => {
   //register him/her on browser session
   req.session.user = user_session_data;
 
-  return res.status(200).redirect('/');
+  return res.redirect('/');
 }
 
 exports.logout = (req, res, next) => {
-  if(req.user) {
+  if(req.isLoggedIn) {
     req.session.destroy();
-    return res.status(200).redirect('/');
+    return res.redirect('/');
   }
 
   return res.status(404).redirect('/');

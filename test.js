@@ -51,5 +51,21 @@ function sayHi() {
   console.log('hi');
 }
 
-callTodos();
-sayHi();
+// callTodos();
+// sayHi();
+
+
+const testAsync = async _=> Promise.resolve('hi');
+testAsync().then(console.log);
+
+testInit = {
+  user: (res = 2) => {
+    console.log(res)
+  },
+  user2: {}
+}
+
+testInit.user(123);
+
+const test = console.log
+// test(12);

@@ -34,7 +34,7 @@ exports.deleteAll = async (req, res, next) => {
         await Products.deleteAll();
         res.status(201).redirect('/');
     } catch (error) {
-        throw new Error(error);   
+        console.log(error);   
     }
 }
 
@@ -43,6 +43,17 @@ exports.page = (req, res, next) => {
         pageTitle: 'Add Products',
         pagePath: '/admin/add-product',
         message: '',
-        isLoggedIn: !!req.user
+        isLoggedIn: req.isLoggedIn,
+        username: req.isLoggedIn ? req.user.name : ''
     });
+}
+
+exports.cartPage = (req, res, next) => {
+    res.render('cart', {
+        pageTitle: 'My Cart',
+        pagePath: '/admin/cart',
+        message: '',
+        isLoggedIn: req.isLoggedIn,
+        username: req.isLoggedIn ? req.user.name : ''
+    })
 }

@@ -1,9 +1,11 @@
-const { page, add, deleteAll } = require('../controllers/ProductsController');
+const { page, cartPage, add, deleteAll } = require('../controllers/ProductsController');
+const { isAuthorize } = require('../util/middleware/auth.middleware');
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/add-product', page);
+router.get('/add-product', isAuthorize, page);
+router.get('/cart', cartPage);
 router.post('/add-product', add);
 router.post('/products/delete', deleteAll);
 

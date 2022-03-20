@@ -1,5 +1,5 @@
 const {
-  db, 
+  db,
   auth,
   Users, 
   cors, 
@@ -15,7 +15,7 @@ const {
   page404Routes, 
   shopRoutes
 } = require('./env');
-
+  
 //Set pug as render engine
 // app.set('view engine', 'pug');
 
@@ -50,20 +50,22 @@ app.use(
 //set user to every incoming request..
 app.use((req, res, next) => {
   if (!req.session.user) {
+    req.isLoggedIn = false;
     return next();
   }
 
   Users.findOne({where:{id: req.session.user.id}})
   .then(user => {
     if(!user) {
+      req.isLoggedIn = false;
       return next();
     }
     
+    req.isLoggedIn = true;
     req.user = user.dataValues;
     return next(); 
   })
-  .catch(err => { throw new Error(err) });
-  
+  .catch(console.log);
 });
 
 //load all express routes
@@ -74,12 +76,12 @@ app.use(page404Routes);
 
 db.sync()
   .then(
-    res => {
+    _ => {
       app.listen(port);
       console.log(`Your app is runing on: http://localhost:${port}`)
     },
     err => {
-      throw new Error(err);
+      console.log(err);
     }
   );
 
