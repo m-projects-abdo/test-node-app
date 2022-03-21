@@ -5,6 +5,11 @@
 
 <body>
   <%- include('./includes/navigation.ejs') %> 
+  <% if(message) { %>
+    <div class="error-message">
+      <p><%= message %></p>
+    </div>
+  <% } %>
   <main>
     <h1>My Products</h1>
     <div>
@@ -14,7 +19,7 @@
           <article class="card product-item">
             <header class="card__header">
                 <p class="product__title">
-                  <%= item.ownerName %>
+                  <%= item.user.name %>
                 </p>
                 <p class="product__title">
                   <%= item.title %>

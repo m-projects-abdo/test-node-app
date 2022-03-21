@@ -3,29 +3,23 @@ const Products = require('../data/migrations/products');
 exports.add = async (req, res, next) => {
     const {title, price, description} = req.body;
     
-    if (!title || !price || !description) {
-        res.status(201).render('add-product', {
-            pageTitle: 'Add Products',
-            message: 'Please Add some Data',
-            status: 'warning',
-            errorCode: 1
-        });
-    } 
     
     try {
-        if (!req.user) {
-            return res.render('add-product', {
-                pageTitle: 'Add Products',
-                pagePath: '/admin/add-product',
-                message: 'You need to log in.',
-                isLoggedIn: !!req.user
-            });
-        }
-        const ownerName = req.user.name
-        await Products.create({title,price,description,ownerName});
+        if (!title || !price || !description) throw new Error('Please add product details.')
+        if (!req.user) throw new Error('You need to log in.');
+
+        const product = await req.user.createProduct({title,price,description});
+        if(!product) throw new Error('Internal server error')
+
         res.status(201).redirect('/');
     } catch (error) {
-        throw new Error(error);
+        res.render('add-product', {
+            pageTitle: 'Add Products',
+            pagePath: '/admin/add-product',
+            message: error.message,
+            isLoggedIn: !!req.user,
+            username: !!req.user ? req.user.name : ''
+        });
     }
 }
 
@@ -38,13 +32,13 @@ exports.deleteAll = async (req, res, next) => {
     }
 }
 
-exports.page = (req, res, next) => {
+exports.productPage = (req, res, next) => {
     res.status(200).render('add-product', {
         pageTitle: 'Add Products',
         pagePath: '/admin/add-product',
         message: '',
-        isLoggedIn: req.isLoggedIn,
-        username: req.isLoggedIn ? req.user.name : ''
+        isLoggedIn: !!req.user,
+        username: !!req.user ? req.user.name : ''
     });
 }
 
@@ -53,7 +47,7 @@ exports.cartPage = (req, res, next) => {
         pageTitle: 'My Cart',
         pagePath: '/admin/cart',
         message: '',
-        isLoggedIn: req.isLoggedIn,
-        username: req.isLoggedIn ? req.user.name : ''
+        isLoggedIn: !!req.user,
+        username: !!req.user ? req.user.name : ''
     })
 }

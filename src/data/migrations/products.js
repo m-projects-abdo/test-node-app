@@ -8,10 +8,11 @@ const products = db.define('products', {
     allowNull: false,
     primaryKey: true,
   },
-  ownerName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
+  // userId: {
+  //   type: Sequelize.INTEGER,
+  //   allowNull: false,
+  //   unique: true,
+  // },
   title: {
     type: Sequelize.STRING,
     allowNull: false,

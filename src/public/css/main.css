@@ -151,3 +151,10 @@ main {
   color: red;
   font-weight: bold;
 }
+
+.error-user-message {
+  width: 100%;
+  padding: 10px;
+  float: right;
+  color: red;
+}

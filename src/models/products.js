@@ -12,7 +12,7 @@ module.exports = class Products {
       const products = await ProductsModel.findAll();
       return products;
     } catch (error) {
-      throw new Error(error);      
+      console.log(error);
     }
   }
 

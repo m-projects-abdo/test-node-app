@@ -1,11 +1,12 @@
 const {
   db,
   auth,
-  Users, 
   cors, 
   path, 
   app,
   port,
+  Users,
+  Products,
   TWO_HOURS,
   express,
   session,
@@ -13,7 +14,8 @@ const {
   sqlSessionConnection, 
   adminRoutes, 
   page404Routes, 
-  shopRoutes
+  shopRoutes,
+  initUserMeddleware
 } = require('./env');
   
 //Set pug as render engine
@@ -47,26 +49,8 @@ app.use(
   })
 );
 
-//set user to every incoming request..
-app.use((req, res, next) => {
-  if (!req.session.user) {
-    req.isLoggedIn = false;
-    return next();
-  }
-
-  Users.findOne({where:{id: req.session.user.id}})
-  .then(user => {
-    if(!user) {
-      req.isLoggedIn = false;
-      return next();
-    }
-    
-    req.isLoggedIn = true;
-    req.user = user.dataValues;
-    return next(); 
-  })
-  .catch(console.log);
-});
+//check authorization user for every time request...
+app.use(initUserMeddleware);
 
 //load all express routes
 app.use('/auth', auth);
@@ -74,7 +58,11 @@ app.use('/admin', shopRoutes);
 app.use(adminRoutes);
 app.use(page404Routes);
 
-db.sync()
+//Set reletionship
+Products.belongsTo(Users, { constraints: true, onDelete: 'CASCADE' });
+Users.hasMany(Products);
+
+db.sync({ force: false })
   .then(
     _ => {
       app.listen(port);
@@ -84,4 +72,3 @@ db.sync()
       console.log(err);
     }
   );
-
