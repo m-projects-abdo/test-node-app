@@ -2,7 +2,7 @@
   let cartList = [];
   const item = {};
 
-  function addToCart(itemDom) {
+  const addToCart = itemDom => {
     const domSelect = itemDom.parentNode.parentNode;
     
     cartList = getFromLocalStorage();
@@ -15,7 +15,21 @@
     localStorage.setItem('cart', JSON.stringify(cartList));
   }
 
-  function getFromLocalStorage() {
+  const removeFromCart = itemIndex => {
+    //get user products from localsotrage cart
+    userCart = getFromLocalStorage();
+
+    //remove specific product by passing index of product
+    userCart.splice(itemIndex, 1);
+
+    //reset user cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(userCart));
+    
+    //reinit dom to load current products cart
+    initCartDom();
+  }
+
+  const getFromLocalStorage = _=> {
     return JSON.parse(localStorage.getItem('cart')) || [];
   }
 </script>

@@ -1,25 +1,23 @@
 <script>
   //Cart init and load from localStorage  
   let cartInit;
+  let userCart = [];
   let cartIsEmpty = `<p>No products added</p>`;
   let cartContainer = document.getElementById('cart-container');
 
-  window.onload = ()=> {
+  window.onload = _=> {
     initCartDom();
   }
-  
-  function removeFromCart(itemDom) {
-    userCart = getFromLocalStorage();
-  }
 
-  function initCartDom() {
+  const initCartDom = _=> {
     userCart = getFromLocalStorage();
+    
     if(userCart.length == 0)  {
       cartContainer.innerHTML = cartIsEmpty;
       return;
     }
 
-    userCart.forEach(element => {
+    userCart.forEach((element, index) => {
       cartInit = `
         <article class="card product-item">
           <header class="card__header">
@@ -30,13 +28,13 @@
             <p class="product__description">${element.description}</p>
           </div>
           <div class="card__actions">
-            <button onclick="removeFromCart(this)" class="btn">
+            <button onclick="removeFromCart(${index})" class="btn">
               Remove from cart
             </button>
           </div>
         </article>
       `;
-      cartContainer.innerHTML = cartInit;
+      cartContainer.innerHTML += cartInit;
     });
   }
 </script>
