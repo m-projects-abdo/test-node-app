@@ -1,0 +1,39 @@
+<%- include('./includes/head.ejs') %>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/product.css">
+</head>
+<body>
+  <%- include('./includes/navigation.ejs') %> 
+  <main class="profile">
+    <div>
+      <h4>Details: </h4>
+      <div class="grid">
+        <article class="card product-item">
+          <header class="card__header">
+            <p class="product__title">
+              <%= product.title %>
+            </p>
+          </header>
+          <div class="card__content">
+            <p class="product__price">
+              <span>Price:</span> <%= product.price %>$
+            </p>
+            <p class="product__title">
+              <span>Owner name:</span> <%= product.user.name %>
+            </p>
+            <p class="product__description">
+              <span>Description:</span> <%= product.description %>..
+            </p>
+          </div>
+          <div class="card__actions">
+            <button class="btn">Add to Cart</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <form action="/" method="GET">
+      <button class="home_button" type="submit">Back to home..</button>
+    </form>
+  </main>
+<%- include('./includes/end.ejs') %> 

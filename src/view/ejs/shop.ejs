@@ -18,31 +18,40 @@
         <% for(let item of prods) { %>
           <article class="card product-item">
             <header class="card__header">
-                <p class="product__title">
-                  <%= item.user.name %>
-                </p>
-                <p class="product__title">
-                  <%= item.title %>
-                </p>
+              <p class="product__title">
+                <%= item.title %>
+              </p>
             </header>
-            <div class="card__image">
+            <!-- <div class="card__image"> -->
               <!-- <img 
                 width="200"
                 height="200"
                 src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" 
                 alt="A Book"
               > -->
-            </div>
+            <!-- </div> -->
             <div class="card__content">
-                <p class="product__price">
-                  <%= item.price %>$
-                </p>
-                <p class="product__description">
-                  <%= item.description %>..
-                </p>
+              <p class="product__price">
+                <span>Price:</span> <%= item.price %>$
+              </p>
+              <p class="product__title">
+                <span>Owner name:</span> <%= item.user.name %>
+              </p>
+              <p class="product__description">
+                <span>Description:</span> <%= item.description %>..
+              </p>
             </div>
             <div class="card__actions">
-                <button onclick="addToCart(this)" class="btn">Add to Cart</button>
+              <form action="/cart/<%= item.id %>" method="POST">
+                <button type="submit" class="btn">
+                  Add to Cart
+                </button>
+              </form>
+              <% if(isLoggedIn) { %>
+                <a href="/product/1" class="btn">
+                  Details
+                </a>
+              <% } %>
             </div>
           </article>
         <% } %>

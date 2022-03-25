@@ -10,7 +10,7 @@
     <% if (message) { %>
       <a href="/auth/login" class="errors-message"><%= message %></a> 
     <% } %>
-    <form class="product-form" action="/admin/add-product" method="POST">
+    <form class="product-form" action="/product" method="POST">
       <div class="form-control">
         <label for="title">Title</label>
         <input type="text" name="title" id="title">
@@ -27,7 +27,9 @@
         ></textarea>
       </div>
   
-      <button class="btn" type="submit">Add Product</button>
+      <button class="btn" type="submit">
+        Add Product
+      </button>
     </form>
   </main>
 <%- include('./includes/end.ejs') %> 

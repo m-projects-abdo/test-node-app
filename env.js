@@ -7,16 +7,22 @@ exports.cors = require('cors');
 exports.db = require('./src/util/connection');
 exports.sqlSessionConnection = require("connect-session-sequelize")(this.session.Store);
 
-exports.auth = require('./src/routes/auth/users');
+exports.authRoutes = require('./src/routes/auth');
+exports.profileRoutes = require('./src/routes/profile');
+exports.productRoutes = require('./src/routes/product');
 exports.adminRoutes = require('./src/routes/admin');
-exports.shopRoutes = require('./src/routes/shop');
+exports.homeRoutes = require('./src/routes/home');
+exports.cartRoutes = require('./src/routes/cart');
 exports.page404Routes = require('./src/routes/pageNotFound');
 
 const { initUser } = require('./src/util/middleware/auth.middleware');
 exports.initUserMeddleware = initUser;
 
-exports.Users = require('./src/data/migrations/users');
-exports.Products = require('./src/data/migrations/products');
+const { RunRelation } = require('./src/data/index');
+exports.RunRelation = RunRelation;
+
+exports.User = require('./src/data/migrations/users');
+exports.Product = require('./src/data/migrations/products');
 
 exports.app = this.express();
 exports.router = this.express.Router();

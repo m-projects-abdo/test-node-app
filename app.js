@@ -1,21 +1,23 @@
 const {
   db,
-  auth,
   cors, 
   path, 
   app,
   port,
-  Users,
-  Products,
   TWO_HOURS,
   express,
   session,
   bodyParser,
   sqlSessionConnection, 
   adminRoutes, 
+  authRoutes, 
+  cartRoutes, 
+  homeRoutes,
+  profileRoutes,
+  productRoutes,
   page404Routes, 
-  shopRoutes,
-  initUserMeddleware
+  initUserMeddleware,
+  RunRelation
 } = require('./env');
   
 //Set pug as render engine
@@ -53,14 +55,16 @@ app.use(
 app.use(initUserMeddleware);
 
 //load all express routes
-app.use('/auth', auth);
-app.use('/admin', shopRoutes);
-app.use(adminRoutes);
+app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
+app.use('/cart', cartRoutes);
+app.use('/profile', profileRoutes);
+app.use('/product', productRoutes);
+app.use(homeRoutes);
 app.use(page404Routes);
 
-//Set reletionship
-Products.belongsTo(Users, { constraints: true, onDelete: 'CASCADE' });
-Users.hasMany(Products);
+//Define relationships
+RunRelation();
 
 db.sync({ force: false })
   .then(

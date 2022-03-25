@@ -56,7 +56,7 @@ function sayHi() {
 
 
 const testAsync = async _=> Promise.resolve('hi');
-testAsync().then(console.log);
+// testAsync().then(console.log);
 
 testInit = {
   user: (res = 2) => {
@@ -65,7 +65,41 @@ testInit = {
   user2: {}
 }
 
-testInit.user(123);
+// testInit.user(123);
 
-const test = console.log
+// const test = console.log
 // test(12);
+
+class AppError extends Error {
+  errors_arr;
+  
+  constructor(message) {
+    super(message);
+    this.errors_arr = message;
+  }
+
+  get errors() {
+    return this.errors_arr;
+  }
+}
+
+const testErrorClass = async () => {
+  try {
+    const arr = [
+      {
+        message: 'Not found..'
+      }
+    ]
+
+    const test = 'test';
+
+    throw new AppError(arr);
+  } catch(err) {
+    console.log(err.errors);
+  }
+}
+
+let testingS = ['hi','man'];
+// console.log(testingS.join(','))
+
+// testErrorClass();
