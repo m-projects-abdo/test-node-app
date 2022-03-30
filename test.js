@@ -103,3 +103,23 @@ let testingS = ['hi','man'];
 // console.log(testingS.join(','))
 
 // testErrorClass();
+
+
+class Test {
+  number = 0;
+
+  incNumber() {
+    this.number++;
+    return this;
+  }
+
+  multiNumber() {
+    this.number = this.number * 2;
+    return this
+  }
+}
+
+let testClass = new Test();
+console.log(testClass.multiNumber().number);
+console.log(testClass.incNumber().number);
+console.log(testClass.incNumber().multiNumber().number);

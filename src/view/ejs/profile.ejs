@@ -5,8 +5,8 @@
 <body>
   <%- include('./includes/navigation.ejs') %> 
   <main class="profile">
-    <h1><%= data.name %></h1>
-    <p><%= data.email %></p>
+    <h1><%= profile.name %></h1>
+    <p><%= profile.email %></p>
 
     <div>
       <h4>Products: </h4>
@@ -16,19 +16,36 @@
             <article class="card product-item">
               <header class="card__header">
                 <p class="product__title">
-                  <%= item.dataValues.title %>
+                  <%= item.title %>
                 </p>
               </header>
+              <!-- <div class="card__image"> -->
+                <!-- <img 
+                  width="200"
+                  height="200"
+                  src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" 
+                  alt="A Book"
+                > -->
+              <!-- </div> -->
               <div class="card__content">
                 <p class="product__price">
-                  <%= item.dataValues.price %>$
+                  <span>Price:</span> <%= item.price %>$
                 </p>
                 <p class="product__description">
-                  <%= item.dataValues.description %>..
+                  <span>Description:</span> <%= item.description %>..
                 </p>
               </div>
               <div class="card__actions">
-                <button class="btn">Add to Cart</button>
+                <form action="/cart/<%= item.id %>" method="POST">
+                  <button type="submit" class="btn">
+                    Remove from Cart
+                  </button>
+                </form>
+                <% if(isLoggedIn) { %>
+                  <a href="/product/<%= item.id %>" class="btn">
+                    Details
+                  </a>
+                <% } %>
               </div>
             </article>
           <% } %>

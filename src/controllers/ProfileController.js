@@ -1,3 +1,5 @@
+const User = require('../data/model/user.model');
+
 exports.page = async (req, res, next) => {
   try {
     const userProduct = await req.user.getProducts();        
@@ -5,13 +7,32 @@ exports.page = async (req, res, next) => {
       pageTitle: req.user.name,
       pagePath: '/profile',
       isLoggedIn: !!req.user,
-      data: req.user,
+      profile: req.user,
       products: userProduct,
       username: req.user.name
     });
   } 
   catch (error) {
     console.log(error);
+  }
+}
+
+exports.pageById = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    const hisProduct = await user.getProducts();
+    
+    return res.status(200).render('profile', {
+      pageTitle: user.dataValues.name,
+      pagePath: '',
+      isLoggedIn: !!req.user,
+      profile: user,
+      products: hisProduct,
+      username: req.user.name
+    });
+  }
+  catch (err) {
+    console.log(err.message);
   }
 }
 
