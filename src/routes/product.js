@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', isAuthorize, page);
-router.get('/:id', isAuthorize, details);
+router.get('/:id', details);
 router.post('/', isAuthorize, create);
 router.delete('/', isAuthorize, drop);
 

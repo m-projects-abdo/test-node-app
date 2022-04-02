@@ -7,7 +7,7 @@
   <%- include('./includes/navigation.ejs') %> 
   <main class="cart">
     <div>
-      <h4>Products: </h4>
+      <h4>Products in cart: </h4>
       <div>
         <div class="grid">
         <% if (cartProduct.length > 0) { %>
@@ -31,6 +31,9 @@
                   <span>Price:</span> <%= item.price %>$
                 </p>
                 <p class="product__title">
+                  <span>Quantity:</span> <%= item.cartItem.quantity %>
+                </p>
+                <p class="product__title">
                   <span>Owner name:</span>
                   <a href="/profile/<%= item.userId %>">
                     <%= item.user.name %>
@@ -41,16 +44,16 @@
                 </p>
               </div>
               <div class="card__actions">
-                <form action="/cart/<%= item.id %>" method="POST">
-                  <button type="submit" class="btn">
-                    Remove from Cart
-                  </button>
-                </form>
                 <% if(isLoggedIn) { %>
-                  <a href="/product/<%= item.id %>" class="btn">
-                    Details
-                  </a>
+                  <form action="/cart/remove/<%= item.id %>" method="POST">
+                    <button type="submit" class="btn">
+                      Remove from Cart
+                    </button>
+                  </form>
                 <% } %>
+                <a href="/product/<%= item.id %>" class="btn">
+                  Details
+                </a>
               </div>
             </article>
           <% } %>
@@ -60,10 +63,14 @@
         </div>
       </div>
     </div>
-
-    <form action="/" method="GET">
-      <button class="home_button" type="submit">Back to home..</button>
-    </form>
+    <hr>
+    <% if (isLoggedIn && cartProduct.length > 0) { %>          
+      <form action="/order" method="POST">
+        <button type="submit" class="btn">
+          Order now!
+        </button>
+      </form>
+    <% } %>
   </main>
 <!-- <%- include('./includes/scripts/cart-init.ejs') %> -->
 <%- include('./includes/end.ejs') %> 

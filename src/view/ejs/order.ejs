@@ -5,16 +5,11 @@
 
 <body>
   <%- include('./includes/navigation.ejs') %> 
-  <% if(message) { %>
-    <div class="error-message">
-      <p><%= message %></p>
-    </div>
-  <% } %>
-  <main>
-    <div>
-      <div class="grid">
-      <% if (prods.length > 0) { %>
-        <% for(let item of prods) { %>
+  <h1>My orders: </h1>
+  <main class="cart">
+    <div class="grid">
+      <% if (productOrdered.length > 0) { %>
+        <% for(let item of productOrdered) { %>
           <article class="card product-item">
             <header class="card__header">
               <p class="product__title">
@@ -34,6 +29,9 @@
                 <span>Price:</span> <%= item.price %>$
               </p>
               <p class="product__title">
+                <span>Quantity:</span> <%= item.orderItem.quantity %>
+              </p>
+              <p class="product__title">
                 <span>Owner name:</span>
                 <a href="/profile/<%= item.userId %>">
                   <%= item.user.name %>
@@ -44,13 +42,6 @@
               </p>
             </div>
             <div class="card__actions">
-              <% if(isLoggedIn && userId != item.user.id) { %>
-                <form action="/cart/<%= item.id %>" method="POST">
-                  <button type="submit" class="btn">
-                    Add to Cart
-                  </button>
-                </form>
-              <% } %>
               <a href="/product/<%= item.id %>" class="btn">
                 Details
               </a>
@@ -58,10 +49,12 @@
           </article>
         <% } %>
       <% } else { %>
-        <p>No products..</p>
+        <p>No products ordered yet..</p>
       <% } %>
-      </div>
     </div>
-    <!-- <p>List of all the products...</p> -->
+
+    <form action="/" method="GET">
+      <button class="home_button" type="submit">Back to home..</button>
+    </form>
   </main>
-<%- include('./includes/end.ejs') %>
+<%- include('./includes/end.ejs') %> 

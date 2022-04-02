@@ -1,5 +1,5 @@
-const Users = require('../data/migrations/users');
-const Products = require('../data/migrations/products');
+const Users = require('../data/model/user.model');
+const Products = require('../data/model/product.model');
 
 exports.page = (req, res, next) => {
   res.json({

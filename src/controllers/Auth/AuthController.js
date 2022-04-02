@@ -45,11 +45,16 @@ exports.register = async (req, res, next) => {
     //check if create new user has an error
     if(!user_session_data) throw new AppError([{message:'Faild to create new user'}]);
     
+    //create cart for this user
+    await user_session_data.createCart();
+
     //register him/her on server session
     req.session.user = await user_session_data;
-
-    //after complet creation redirect to home page
-    await res.redirect('/');
+    req.session.save(err => {
+      console.log(err); 
+      //after complet creation redirect to home page
+      res.redirect('/');
+    })
   } 
   catch(err) {
     return res.status(404).render('register', {
@@ -79,10 +84,12 @@ exports.login = async (req, res, next) => {
 
     //register him/her on browser session
     req.session.user = await user_session_data;
-    res.redirect('/');
+    req.session.save(err => {
+      console.log(err);
+      res.redirect('/');
+    })
   } 
   catch(err) {
-    console.log(err.errors)
     return res.status(err.statusCode).render('login', {
       pagePath: '/auth/login',
       pageTitle: 'Login',
@@ -96,8 +103,10 @@ exports.login = async (req, res, next) => {
 exports.logout = (req, res, next) => {
   if(!req.user) return res.status(404).redirect('/');
   
-  req.session.destroy()
-  res.redirect('/');
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  })
 }
 
 const messageValidator = (payload) => {  

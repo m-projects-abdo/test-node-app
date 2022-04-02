@@ -118,8 +118,21 @@ class Test {
     return this
   }
 }
-
+console.log([1,2,3,4,5].filter(e=>e>2).map(e=>e*2));
 let testClass = new Test();
 console.log(testClass.multiNumber().number);
 console.log(testClass.incNumber().number);
 console.log(testClass.incNumber().multiNumber().number);
+
+function ElementRef(name, subName) {
+  this.name = name;
+  this.subName = subName;
+}
+
+ElementRef.prototype.unicha = function() {
+  return this.name;
+}
+
+
+const test = new ElementRef('mohammed', 'vector');
+console.log(test.__proto__.unicha);

@@ -9,18 +9,18 @@ exports.page = async (req, res, next) => {
       isLoggedIn: !!req.user,
       profile: req.user,
       products: userProduct,
-      username: req.user.name
+      username: req.user.name,
     });
   } 
   catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 }
 
 exports.pageById = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
-    const hisProduct = await user.getProducts();
+    const hisProduct = await user.getProducts({include: ['user']});
     
     return res.status(200).render('profile', {
       pageTitle: user.dataValues.name,
@@ -28,7 +28,8 @@ exports.pageById = async (req, res, next) => {
       isLoggedIn: !!req.user,
       profile: user,
       products: hisProduct,
-      username: req.user.name
+      username: req.user.name,
+      userId: !!req.user ? req.user.id : 0 
     });
   }
   catch (err) {

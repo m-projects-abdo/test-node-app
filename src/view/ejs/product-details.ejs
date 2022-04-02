@@ -19,15 +19,20 @@
               <span>Price:</span> <%= product.price %>$
             </p>
             <p class="product__title">
-              <span>Owner name:</span> <%= product.user.name %>
+              <span>Owner name:</span> 
+              <a href="/profile/<%= product.user.id %>">
+                <%= product.user.name %>
+              </a>
             </p>
             <p class="product__description">
               <span>Description:</span> <%= product.description %>..
             </p>
           </div>
+          <% if(isLoggedIn) { %>
           <div class="card__actions">
             <button class="btn">Add to Cart</button>
           </div>
+          <% } %>
         </article>
       </div>
     </div>

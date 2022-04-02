@@ -6,7 +6,7 @@
   <%- include('./includes/navigation.ejs') %> 
   <main class="profile">
     <h1><%= profile.name %></h1>
-    <p><%= profile.email %></p>
+    <p>Email: <%= profile.email %></p>
 
     <div>
       <h4>Products: </h4>
@@ -36,16 +36,18 @@
                 </p>
               </div>
               <div class="card__actions">
-                <form action="/cart/<%= item.id %>" method="POST">
-                  <button type="submit" class="btn">
-                    Remove from Cart
-                  </button>
-                </form>
-                <% if(isLoggedIn) { %>
-                  <a href="/product/<%= item.id %>" class="btn">
-                    Details
-                  </a>
+                <% if(!!item.user) { %>
+                  <% if(isLoggedIn && userId != item.user.id) { %>
+                    <form action="/cart/<%= item.id %>" method="POST">
+                      <button type="submit" class="btn">
+                        Add to Cart
+                      </button>
+                    </form>
+                  <% } %>
                 <% } %>
+                <a href="/product/<%= item.id %>" class="btn">
+                  Details
+                </a>
               </div>
             </article>
           <% } %>

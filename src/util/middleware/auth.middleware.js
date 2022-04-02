@@ -16,12 +16,15 @@ exports.initUser = async (req, res, next) => {
     if(!req.session.user) throw new Error('User not authorize.')
     
     const user = await Users
-      .findOne({where:{id: req.session.user.id}});
+      .findByPk(req.session.user.id);
 
     if(!user) throw new Error('User not authorize.');
 
     req.user = user;
     next();
   } 
-  catch(err) { next() }
+  catch(err) { 
+    console.log(err.message);
+    next() 
+  }
 }

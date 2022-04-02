@@ -3,20 +3,21 @@ const Products = require('../data/model/product.model');
 
 exports.page = async (req, res, next, errorMessage = '') => {
   try {
-    let products = await Products.findAll({ include: Users });
-    
-    console.log(req.user)
+    const products = await Products.findAll({ include: Users });
+    const isLoggedIn = !!req.user;
+    const username = isLoggedIn ? req.user.name : '';
 
     res.render('shop', {
       pageTitle: 'Online Shop',
       prods: products || [],
       pagePath: '/',
-      isLoggedIn: !!req.user,
+      isLoggedIn: isLoggedIn,
       message: errorMessage,
-      username: !!req.user ? req.user.name : ''
+      username: username,
+      userId: !!req.user ? req.user.id : 0 
     })
   } 
   catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 }

@@ -12,6 +12,7 @@ const {
   adminRoutes, 
   authRoutes, 
   cartRoutes, 
+  orderRoutes, 
   homeRoutes,
   profileRoutes,
   productRoutes,
@@ -58,6 +59,7 @@ app.use(initUserMeddleware);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/cart', cartRoutes);
+app.use('/order', orderRoutes);
 app.use('/profile', profileRoutes);
 app.use('/product', productRoutes);
 app.use(homeRoutes);
