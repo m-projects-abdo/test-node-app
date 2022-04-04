@@ -3,6 +3,8 @@ exports.session = require('express-session')
 exports.path = require('path');
 exports.bodyParser = require('body-parser');
 exports.cors = require('cors');
+exports.flash = require('connect-flash');
+exports.csrf = require('csurf');
 
 exports.db = require('./src/util/connection');
 exports.sqlSessionConnection = require("connect-session-sequelize")(this.session.Store);

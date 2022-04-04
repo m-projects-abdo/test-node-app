@@ -3,12 +3,9 @@ const bcrypt = require('bcryptjs');
 const AppError = require('../../util/errors-handling/app.error');
 
 exports.registerPage = (req, res, next) => {
-  res.render('register',{
+  res.status(200).render('register',{
     pageTitle: 'Register page',
     pagePath: '/auth/register',
-    isLoggedIn: !!req.user,
-    username: !!req.user ? req.user.name : '',
-    errors: []
   });
 }
 
@@ -16,9 +13,6 @@ exports.loginPage = (req, res, next) => {
   res.status(200).render('login',{
     pageTitle: 'Login page',
     pagePath: '/auth/login',
-    isLoggedIn: !!req.user,
-    username: !!req.user ? req.user.name : '',
-    errors: []
   });
 }
 
@@ -52,18 +46,14 @@ exports.register = async (req, res, next) => {
     req.session.user = await user_session_data;
     req.session.save(err => {
       console.log(err); 
+
       //after complet creation redirect to home page
       res.redirect('/');
     })
   } 
   catch(err) {
-    return res.status(404).render('register', {
-      pagePath: '/auth/register',
-      pageTitle: 'Register',
-      isLoggedIn: !!req.user,
-      username: !!req.user ? req.user.name : '',
-      errors: err.errors
-    });
+    req.flash('error', err.errors);
+    res.redirect(err.statusCode, '/auth/register');
   }
 }
 
@@ -90,19 +80,12 @@ exports.login = async (req, res, next) => {
     })
   } 
   catch(err) {
-    return res.status(err.statusCode).render('login', {
-      pagePath: '/auth/login',
-      pageTitle: 'Login',
-      isLoggedIn: !!req.user,
-      username: !!req.user ? req.user.name : '',
-      errors: err.errors
-    });
+    req.flash('error', err.errors);
+    res.redirect(err.statusCode, '/auth/login');
   }
 }
 
 exports.logout = (req, res, next) => {
-  if(!req.user) return res.status(404).redirect('/');
-  
   req.session.destroy(err => {
     console.log(err);
     res.redirect('/');

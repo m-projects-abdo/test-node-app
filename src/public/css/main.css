@@ -164,6 +164,25 @@ main {
   font-weight: bold;
 }
 
+.error-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.alert-error {
+  background: lightcoral;
+  color: #dc1b1b;
+  font-weight: bold;
+  padding: 8px 15px;
+  text-align: center;
+  border-radius: 3px;
+  border: 1px solid #c63b3b;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .error-user-message {
   width: 100%;
   padding: 10px;

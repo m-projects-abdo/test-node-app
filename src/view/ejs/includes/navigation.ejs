@@ -36,6 +36,7 @@
         </li>
         <li class="main-header__item">
           <form action="/auth/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken%>">
             <button type="submit" class="user_button">
               Logout
             </button>

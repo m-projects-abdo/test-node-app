@@ -6,10 +6,8 @@ exports.page = async (req, res, next) => {
     return res.status(200).render('profile', {
       pageTitle: req.user.name,
       pagePath: '/profile',
-      isLoggedIn: !!req.user,
       profile: req.user,
       products: userProduct,
-      username: req.user.name,
     });
   } 
   catch (error) {
@@ -25,10 +23,8 @@ exports.pageById = async (req, res, next) => {
     return res.status(200).render('profile', {
       pageTitle: user.dataValues.name,
       pagePath: '',
-      isLoggedIn: !!req.user,
       profile: user,
       products: hisProduct,
-      username: req.user.name,
       userId: !!req.user ? req.user.id : 0 
     });
   }

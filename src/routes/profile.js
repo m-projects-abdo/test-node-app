@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', isAuthorize, page);
-router.get('/:id', isAuthorize, pageById);
+router.get('/:id', pageById);
 router.get('/details', isAuthorize, details);
 
 module.exports = router;

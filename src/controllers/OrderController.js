@@ -1,22 +1,34 @@
+const Product = require('../data/model/product.model');
+const AppError = require('../util/errors-handling/app.error');
+
 exports.page = async (req, res, next) => {
   try {
     let productOrdered = [];
-    const userOrder = await req.user.getOrder();
+    const userOrder = await req.user.getOrder({
+      include: [
+        {
+          model: Product,
+          include: ['user']
+        }
+      ]
+    });
     
-    if(userOrder) {
-      productOrdered = await userOrder.getProducts({
-        include: ['user']
-      });
-    }
+    // if(userOrder) {
+    //   productOrdered = await userOrder.getProducts({
+    //     include: ['user']
+    //   });
+    // }
 
-    res.render('order', {
-      pagePath: '/order',
-      pageTitle: 'My Orders',
-      productOrdered: productOrdered,
-      message: '',
-      isLoggedIn: !!req.user,
-      username: !!req.user ? req.user.name : ''
-    })
+    res.send(userOrder);
+
+    // res.render('order', {
+    //   pagePath: '/order',
+    //   pageTitle: 'My Orders',
+    //   productOrdered: productOrdered,
+    //   message: '',
+    //   isLoggedIn: !!req.user,
+    //   username: !!req.user ? req.user.name : ''
+    // })
   }
   catch(err) {
     console.log(err.message);
@@ -30,13 +42,10 @@ exports.add = async (req, res, next) => {
 
     //Check if user have product in cart before added to order
     if(productsInCart.length == 0) 
-      throw new Error('Can\'t make an order because you don\'t have product.');
+      throw new AppError([{message:'Can\'t make an order because you don\'t have a product.'}]);
     
-    let userOrder = await req.user.getOrder();
-    if(!userOrder) {
-      //Create order to store order details
-      userOrder = await req.user.createOrder();
-    } 
+    //Create order to store order details
+    const userOrder = await req.user.createOrder();
 
     productsInCart = productsInCart.map(product => {
       product.orderItem = {
@@ -53,6 +62,8 @@ exports.add = async (req, res, next) => {
     res.redirect('/order');
   }
   catch(err) {
+    req.flash('error', err.errors);
+    res.redirect(err.statusCode, '/cart');
     console.log(err.message);
   }
 }

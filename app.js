@@ -7,6 +7,8 @@ const {
   TWO_HOURS,
   express,
   session,
+  flash,
+  csrf,
   bodyParser,
   sqlSessionConnection, 
   adminRoutes, 
@@ -52,8 +54,23 @@ app.use(
   })
 );
 
-//check authorization user for every time request...
+//check authorization user for every request...
 app.use(initUserMeddleware);
+
+//init csrf token for more scure
+app.use(csrf());
+
+//init flash message for every request...
+app.use(flash());
+
+//set a local variables to all respones...
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  res.locals.isLoggedIn = !!req.user;
+  res.locals.errors = req.flash('error');
+  res.locals.username = !!req.user ? req.user.name : '';
+  next();
+})
 
 //load all express routes
 app.use('/auth', authRoutes);

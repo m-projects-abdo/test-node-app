@@ -5,72 +5,72 @@
 
 <body>
   <%- include('./includes/navigation.ejs') %> 
+  <%- include('./util/errors-message.ejs', {errors}) %> 
   <main class="cart">
+    <h4>Products in cart: </h4>
     <div>
-      <h4>Products in cart: </h4>
-      <div>
-        <div class="grid">
-        <% if (cartProduct.length > 0) { %>
-          <% for(let item of cartProduct) { %>
-            <article class="card product-item">
-              <header class="card__header">
-                <p class="product__title">
-                  <%= item.title %>
-                </p>
-              </header>
-              <!-- <div class="card__image"> -->
-                <!-- <img 
-                  width="200"
-                  height="200"
-                  src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" 
-                  alt="A Book"
-                > -->
-              <!-- </div> -->
-              <div class="card__content">
-                <p class="product__price">
-                  <span>Price:</span> <%= item.price %>$
-                </p>
-                <p class="product__title">
-                  <span>Quantity:</span> <%= item.cartItem.quantity %>
-                </p>
-                <p class="product__title">
-                  <span>Owner name:</span>
-                  <a href="/profile/<%= item.userId %>">
-                    <%= item.user.name %>
-                  </a>
-                </p>
-                <p class="product__description">
-                  <span>Description:</span> <%= item.description %>..
-                </p>
-              </div>
-              <div class="card__actions">
-                <% if(isLoggedIn) { %>
-                  <form action="/cart/remove/<%= item.id %>" method="POST">
-                    <button type="submit" class="btn">
-                      Remove from Cart
-                    </button>
-                  </form>
-                <% } %>
-                <a href="/product/<%= item.id %>" class="btn">
-                  Details
+      <div class="grid">
+      <% if (cartProduct.length > 0) { %>
+        <% for(let item of cartProduct) { %>
+          <article class="card product-item">
+            <header class="card__header">
+              <p class="product__title">
+                <%= item.title %>
+              </p>
+            </header>
+            <!-- <div class="card__image"> -->
+              <!-- <img 
+                width="200"
+                height="200"
+                src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" 
+                alt="A Book"
+              > -->
+            <!-- </div> -->
+            <div class="card__content">
+              <p class="product__price">
+                <span>Price:</span> <%= item.price %>$
+              </p>
+              <p class="product__title">
+                <span>Quantity:</span> <%= item.cartItem.quantity %>
+              </p>
+              <p class="product__title">
+                <span>Owner name:</span>
+                <a href="/profile/<%= item.userId %>">
+                  <%= item.user.name %>
                 </a>
-              </div>
-            </article>
-          <% } %>
-        <% } else { %>
-          <p>No products..</p>
+              </p>
+              <p class="product__description">
+                <span>Description:</span> <%= item.description %>..
+              </p>
+            </div>
+            <div class="card__actions">
+              <% if(isLoggedIn) { %>
+                <form action="/cart/remove/<%= item.id %>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken%>">
+                  <button type="submit" class="btn">
+                    Remove from Cart
+                  </button>
+                </form>
+              <% } %>
+              <a href="/product/<%= item.id %>" class="btn">
+                Details
+              </a>
+            </div>
+          </article>
         <% } %>
-        </div>
+      <% } else { %>
+        <p>No products..</p>
+      <% } %>
       </div>
     </div>
     <hr>
     <% if (isLoggedIn && cartProduct.length > 0) { %>          
       <form action="/order" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken%>">
         <button type="submit" class="btn">
           Order now!
         </button>
       </form>
     <% } %>
   </main>
-<!-- <%- include('./includes/scripts/cart-init.ejs') %> -->
 <%- include('./includes/end.ejs') %> 

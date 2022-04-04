@@ -4,6 +4,7 @@
 </head>
 <body>
   <%- include('./includes/navigation.ejs') %> 
+  <%- include('./util/errors-message.ejs', {errors}) %>
   <main class="profile">
     <div>
       <h4>Details: </h4>
@@ -29,16 +30,21 @@
             </p>
           </div>
           <% if(isLoggedIn) { %>
-          <div class="card__actions">
-            <button class="btn">Add to Cart</button>
-          </div>
+            <% if(!!product.user && userId != product.user.id) { %>
+              <div class="card__actions">
+                <form action="/cart/<%= product.id%>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken%>">
+                  <button type="submit" class="btn">Add to Cart</button>
+                </form>
+              </div>
+            <% } %>
           <% } %>
         </article>
       </div>
     </div>
 
-    <form action="/" method="GET">
-      <button class="home_button" type="submit">Back to home..</button>
-    </form>
+    <a class="home_button" href="/">
+      Back to home..
+    </a>
   </main>
 <%- include('./includes/end.ejs') %> 

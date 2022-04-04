@@ -5,11 +5,7 @@
 
 <body>
   <%- include('./includes/navigation.ejs') %> 
-  <% if(message) { %>
-    <div class="error-message">
-      <p><%= message %></p>
-    </div>
-  <% } %>
+  <%- include('./util/errors-message.ejs', {errors}) %>
   <main>
     <div>
       <div class="grid">
@@ -46,6 +42,7 @@
             <div class="card__actions">
               <% if(isLoggedIn && userId != item.user.id) { %>
                 <form action="/cart/<%= item.id %>" method="POST">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken%>">
                   <button type="submit" class="btn">
                     Add to Cart
                   </button>

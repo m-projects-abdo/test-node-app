@@ -11,9 +11,6 @@ exports.page = async (req, res, next) => {
       pageTitle: 'My Cart',
       pagePath: '/cart',
       cartProduct: productInCart,
-      message: '',
-      isLoggedIn: !!req.user,
-      username: !!req.user ? req.user.name : ''
     })
   }
   catch(err) {
@@ -27,11 +24,13 @@ exports.add = async (req, res, next) => {
     const productId = +req.params.id
     const product = await Product.findByPk(productId);
     
-    if(!product) throw new Error('Product not found!');
-    if(req.user.id == product.userId) throw new Error('Can\'t add product to cart with the same user');
+    if(!product) throw new AppError([{message:'Product not found!'}]);
+    
+    if(req.user.id == product.userId) 
+      throw new AppError([{message:'Can\'t add product to cart with the same user'}]);
 
     const userCart = await req.user.getCart();
-    if(!userCart) throw new Error('User don\'t have a cart!');
+    if(!userCart) throw new AppError([{message:'User don\'t have a cart!'}]);
     
     const productInCart = await userCart.getProducts({
       where: {id: productId}
@@ -45,7 +44,8 @@ exports.add = async (req, res, next) => {
     res.redirect('/cart');
   }
   catch(err) {
-    console.log(err.message)
+    req.flash('error', err.errors);
+    res.redirect(err.statusCode, '/cart');
   }
 }
 
@@ -55,13 +55,16 @@ exports.drop = async (req, res, next) => {
     const productsInCart = await (await req.user.getCart())
       .getProducts({ where: {id: productId} });
     
-    if(productsInCart.length == 0) throw new Error('Product not found!'); 
+    if(productsInCart.length == 0) 
+      throw new AppError([{message:'Product not found!'}]); 
 
     await productsInCart[0].cartItem.destroy();
     res.redirect('/cart');
   } 
   catch (err) {
-    console.log(err.message);
+    req.flash('error', err.errors);
+    res.redirect(err.statusCode, '/cart');
+    console.log(err.errors);
   }
 }
 

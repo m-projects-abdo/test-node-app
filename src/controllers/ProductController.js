@@ -1,13 +1,11 @@
 const Product = require('../data/model/product.model');
 const User = require('../data/model/user.model');
+const AppError = require('../util/errors-handling/app.error');
 
 exports.page = (req, res, next) => {
     res.status(200).render('add-product', {
         pageTitle: 'Add Products',
-        pagePath: '/admin/add-product',
-        message: '',
-        isLoggedIn: !!req.user,
-        username: !!req.user ? req.user.name : ''
+        pagePath: '/product',
     });
 }
 
@@ -16,14 +14,13 @@ exports.details = async (req, res, next) => {
       const productId = req.params.id;
       const productDetails = await Product.findOne({where: {id: productId}, include: User})
   
-      if(!productDetails) throw new Error('Internal server error');
+      if(!productDetails) req.flash('error', [{message: 'Internal server error'}]);
   
       res.render('product-details', {
         pageTitle: 'Product Details',
         pagePath: '',
-        isLoggedIn: !!req.user,
         product: productDetails,
-        username: !!req.user ? req.user.name : ''
+        userId: !!req.user ? req.user.id : 0 
       })
     }
     catch(err) {
@@ -35,28 +32,23 @@ exports.create = async (req, res, next) => {
     const {title, price, description} = req.body;
     
     try {
-        if (!title || !price || !description) throw new Error('Please add product details.')
-        if (!req.user) throw new Error('You need to login.');
+        if (!title || !price || !description) throw new AppError([{message:'Please add product details.'}])
+        if (!req.user) throw new AppError([{message:'You need to login.'}]);
 
         const product = await req.user.createProduct({title,price,description});
-        if(!product) throw new Error('Internal server error')
+        if(!product) throw new AppError([{message:'Internal server error'}])
 
         res.status(201).redirect('/');
     } catch (error) {
-        res.render('add-product', {
-            pageTitle: 'Add Products',
-            pagePath: '/admin/add-product',
-            message: error.message,
-            isLoggedIn: !!req.user,
-            username: !!req.user ? req.user.name : ''
-        });
+        req.flash('error', error.errors);
+        res.redirect(error.statusCode, '/product')
     }
 }
 
 exports.drop = async (req, res, next) => {
     try {
         await Product.set([]);
-        res.status(201).redirect('/');
+        res.status(200).redirect('/');
     } catch (error) {
         console.log(error);   
     }

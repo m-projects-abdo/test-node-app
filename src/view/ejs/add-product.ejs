@@ -6,10 +6,8 @@
 
 <body>
   <%- include('./includes/navigation.ejs') %> 
+  <%- include('./util/errors-message.ejs', {errors}) %> 
   <main>
-    <% if (message) { %>
-      <a href="/auth/login" class="errors-message"><%= message %></a> 
-    <% } %>
     <form class="product-form" action="/product" method="POST">
       <div class="form-control">
         <label for="title">Title</label>
@@ -26,7 +24,8 @@
           rows="10"
         ></textarea>
       </div>
-  
+      
+      <input type="hidden" name="_csrf" value="<%= csrfToken%>">
       <button class="btn" type="submit">
         Add Product
       </button>

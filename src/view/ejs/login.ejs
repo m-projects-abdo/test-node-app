@@ -2,26 +2,24 @@
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/forms.css">
   <link rel="stylesheet" href="/css/product.css">
-  </head>
+</head>
 
-  <body>
-    <%- include('./includes/navigation.ejs') %>
-      <main>
-        <% if (errors.length> 0) { %>
-          <% errors.forEach(err=> { %>
-            <p class="errors-message"><%= err.message %></p>
-          <% }) %>
-        <% } %>
-        <form class="product-form" action="/auth/login" method="POST">
-          <div class="form-control">
-            <label for="email">Email</label>
-            <input required type="email" name="email" id="email">
+<body>
+  <%- include('./includes/navigation.ejs') %>
+  <%- include('./util/errors-message.ejs', {errors}) %>
+    
+  <main>
+    <form class="product-form" action="/auth/login" method="POST">
+      <div class="form-control">
+        <label for="email">Email</label>
+        <input required type="email" name="email" id="email">
 
-            <label for="password">Password</label>
-            <input required type="password" name="password" id="password">
-          </div>
+        <label for="password">Password</label>
+        <input required type="password" name="password" id="password">
+      </div>
 
-          <button class="btn" type="submit">Join us (:</button>
-        </form>
-      </main>
-      <%- include('./includes/end.ejs') %>
+      <input type="hidden" name="_csrf" value="<%= csrfToken%>">
+      <button class="btn" type="submit">Join us (:</button>
+    </form>
+  </main>
+<%- include('./includes/end.ejs') %>

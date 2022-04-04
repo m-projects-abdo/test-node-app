@@ -12,12 +12,13 @@ exports.page = async (req, res, next, errorMessage = '') => {
       prods: products || [],
       pagePath: '/',
       isLoggedIn: isLoggedIn,
-      message: errorMessage,
+      errors: req.flash('error'),
       username: username,
       userId: !!req.user ? req.user.id : 0 
     })
   } 
   catch (error) {
     console.log(error.message);
+    res.redirect(500, '/error');
   }
 }
